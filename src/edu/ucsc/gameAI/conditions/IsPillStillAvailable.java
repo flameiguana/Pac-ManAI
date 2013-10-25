@@ -5,8 +5,9 @@ import edu.ucsc.gameAI.ICondition;
 
 public class IsPillStillAvailable implements ICondition {
 	
+   int _pill;
 	public IsPillStillAvailable(int pill){
-	   
+	   _pill = pill;
 	}
 	/**
 	 * Returns whether a pill was eaten since
@@ -14,6 +15,6 @@ public class IsPillStillAvailable implements ICondition {
 	 */
 	@Override
 	public boolean test(Game game) {
-		return game.getPillIndices().length > 0;
+		return game.isPillStillAvailable(_pill);
 	}
 }
