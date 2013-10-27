@@ -10,9 +10,6 @@ public class State implements IState {
    IAction action, entryAction, exitAction;
    Collection<ITransition> transitions;
    
-   public State(){
-      transitions = new ArrayList<ITransition>();
-   }
    @Override
    public IAction getAction() {
       return action;

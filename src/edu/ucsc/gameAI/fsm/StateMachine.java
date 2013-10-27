@@ -27,10 +27,12 @@ public class StateMachine implements IStateMachine {
       //Get actions associated with making a transition. Update currentState.
       if (triggeredTrans != null){
          IState targetState = triggeredTrans.getTargetState();
-         
-         actions.add(currentState.getExitAction());
-         actions.add(triggeredTrans.getAction());
-         actions.add(targetState.getEntryAction());
+         if(currentState.getExitAction() != null)
+            actions.add(currentState.getExitAction());
+         if(triggeredTrans.getAction() != null)
+            actions.add(triggeredTrans.getAction());
+         if(targetState.getEntryAction() != null)
+            actions.add(targetState.getEntryAction());
          currentState = targetState;
       }
       
