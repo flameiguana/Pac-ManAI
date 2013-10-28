@@ -18,42 +18,35 @@ import edu.ucsc.gameAI.*;
 public class MyPacMan extends Controller<MOVE> {
 
    StateMachine machine;
-   PowerPillInRegion powerPillInRegion;
-   IsJunction isCurrentNodeJunction;
+   State goToPowerPill;
+   PowerPillInRange powerPillInRange;
    
    private MOVE myMove = MOVE.NEUTRAL;
 
    public MyPacMan() {
       super();
-
+      //States
+      goToPowerPill = new State();
+      goToPowerPill.setAction(new SeekPowerPillAction());
       
-      machine = new StateMachine();
-      //TODO Handle case when running into a wall, not just junctions.
-      isCurrentNodeJunction = new IsJunction(0);
-
       State stateNeutral = new State();
       stateNeutral.setAction(new KeepDirectionAction());
+      
+      State chaseGhosts;
 
-      //Instead of having a state where you turn, have transition turn and just remain in state.
-      State stateTurn = new State();
-
-      Transition atInter = new Transition();
-      atInter.setTargetState(stateTurn);
-      atInter.setAction(new GoRandomAction());
-      atInter.setCondition(isCurrentNodeJunction);
-
+      //Conditions
+      powerPillInRange = new PowerPillInRange(20);
+      
+      //Transitions:
+      Transition trans_goToPowerPill = new Transition();
+      trans_goToPowerPill.setCondition(powerPillInRange);
+      trans_goToPowerPill.setTargetState(goToPowerPill);
+      
+      
       LinkedList<ITransition> neutralTransList = new LinkedList<ITransition>();
-      neutralTransList.add(atInter);
+      neutralTransList.add(trans_goToPowerPill);
       stateNeutral.setTransitions(neutralTransList);
-      
-      Transition onPath = new Transition();
-      onPath.setTargetState(stateNeutral);
-      NegateCondition notJunctionNode = new NegateCondition(isCurrentNodeJunction);
-      onPath.setCondition(notJunctionNode);
-      
-      LinkedList<ITransition> turnTransList = new LinkedList<ITransition>();
-      turnTransList.add(onPath);
-      stateTurn.setTransitions(turnTransList);
+ 
 
       //in action check if at turning point or stay in same direction;
       /*
@@ -62,33 +55,26 @@ public class MyPacMan extends Controller<MOVE> {
        * Check if there are ghosts in region
        * Move to point while avoiding ghosts.
        */
-      powerPillInRegion = new PowerPillInRegion(0, 0, 0, 0);
+
       
-      State goToPowerPill = new State();
-      goToPowerPill.setAction(new SeekPowerPillAction());
-      Transition trans_goToPowerPill = new Transition();
-      trans_goToPowerPill.setCondition(powerPillInRegion);
-      trans_goToPowerPill.setTargetState(goToPowerPill);
+
       /*
        * If you have power pill, and there are ghosts in region, chase
        * Otherwise collect pills
        */
-      State chaseGhosts;
+      
       
       //machine.setCurrentState(stateNeutral);
-      machine.setCurrentState(goToPowerPill);
-      //Want to remain facing same direction until you hit intersection.
+      machine = new StateMachine();
+      machine.setCurrentState(stateNeutral);
    }
 
    private void updateConditions(Game game) {
       
       int pacmanNode = game.getPacmanCurrentNodeIndex();
-      isCurrentNodeJunction.update(pacmanNode);
      
       int pacmanX = game.getNodeXCood(pacmanNode);
       int pacmanY = game.getNodeYCood(pacmanNode);
-      
-      powerPillInRegion.update(pacmanX-5, pacmanY - 5, pacmanX + 5, pacmanX + 5);
    }
 
    public MOVE getMove(Game game, long timeDue) {

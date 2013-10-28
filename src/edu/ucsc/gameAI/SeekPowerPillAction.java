@@ -19,15 +19,18 @@ public class SeekPowerPillAction implements IAction {
       //This returns the NODE indices of the power pills. Very confusing function name.
       int[] activePills = game.getActivePowerPillsIndices();
       
-      int min = Integer.MAX_VALUE;
+      double min = Double.MAX_VALUE;
       for(int pill : activePills){
-         int distanceToPill = (int) game.getDistance(game.getPacmanCurrentNodeIndex(), pill, DM.MANHATTAN);
-         if(distanceToPill < min);
-         pillNode = pill;  
+         double distanceToPill = game.getDistance(game.getPacmanCurrentNodeIndex(), pill, DM.MANHATTAN);
+         if(distanceToPill < min){
+         	pillNode = pill; 
+         	min = distanceToPill;
+         	//System.out.println("Pill is: " + game.getPowerPillIndex(pillNode) + " , distance is " + min);
+         }
       }
       pillIndex = game.getPowerPillIndex(pillNode);
       
-      System.out.println("Pill is" + pillIndex);
+      //System.out.println("Target pill is: " + pillIndex);
       progress = 0;
    }
 
@@ -38,13 +41,11 @@ public class SeekPowerPillAction implements IAction {
          selectPill(game);
       }
       progress++;
+      //don't know how efficient this is yet.
       return game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), pillNode, DM.PATH);
       
-      /*
-       * option 1: find nearest pill
-       * 
-       */
       //Find moves.
+      //Useful functions:
       //getMoveToMakeToReachDirectNeighbour
       //getNextMoveTowardsTarget
       //getApproximateNextMoveTowardsTarget

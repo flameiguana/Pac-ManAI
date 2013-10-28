@@ -23,6 +23,7 @@ public class PowerPillInRegion implements ICondition {
 
 	@Override
 	public boolean test(Game game) {
+		
 		for(int p: game.getPowerPillIndices()){
 			int x = game.getNodeXCood(p);
 			int y = game.getNodeYCood(p);
