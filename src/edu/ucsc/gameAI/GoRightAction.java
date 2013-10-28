@@ -20,4 +20,9 @@ public class GoRightAction implements IAction, IBinaryNode {
 	public MOVE getMove() {
 		return MOVE.RIGHT;
 	}
+
+   @Override
+   public MOVE getMove(Game game) {
+      return getMove();
+   }
 }

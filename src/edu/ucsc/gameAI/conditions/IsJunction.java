@@ -11,7 +11,7 @@ public class IsJunction implements ICondition {
       nodeIndex = index;
    }
    
-   public void setIndex(int index){
+   public void update(int index){
       nodeIndex = index;
    }
    

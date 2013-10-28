@@ -3,6 +3,7 @@ package edu.ucsc.gameAI;
 import java.util.Random;
 
 import pacman.game.Constants.MOVE;
+import pacman.game.Game;
 
 public class GoRandomAction implements IAction {
 
@@ -19,11 +20,13 @@ public class GoRandomAction implements IAction {
 
    @Override
    public MOVE getMove() {
-      //excludes last element
       int index = random.nextInt(MOVE.values().length);
-      //get a random index into the enum of moves. Move may be invalid.
-      // TODO check if move is valid
       return MOVE.values()[index];
+   }
+
+   @Override
+   public MOVE getMove(Game game) {
+      return getMove();
    }
 
 }

@@ -18,7 +18,9 @@ import edu.ucsc.gameAI.*;
 public class MyPacMan extends Controller<MOVE> {
 
    StateMachine machine;
+   PowerPillInRegion powerPillInRegion;
    IsJunction isCurrentNodeJunction;
+   
    private MOVE myMove = MOVE.NEUTRAL;
 
    public MyPacMan() {
@@ -53,27 +55,50 @@ public class MyPacMan extends Controller<MOVE> {
       turnTransList.add(onPath);
       stateTurn.setTransitions(turnTransList);
 
-      machine.setCurrentState(stateNeutral);
+      //in action check if at turning point or stay in same direction;
+      /*
+       * See if there are power pills remanining
+       * Choose closest one
+       * Check if there are ghosts in region
+       * Move to point while avoiding ghosts.
+       */
+      powerPillInRegion = new PowerPillInRegion(0, 0, 0, 0);
+      
+      State goToPowerPill = new State();
+      goToPowerPill.setAction(new SeekPowerPillAction());
+      Transition trans_goToPowerPill = new Transition();
+      trans_goToPowerPill.setCondition(powerPillInRegion);
+      trans_goToPowerPill.setTargetState(goToPowerPill);
+      /*
+       * If you have power pill, and there are ghosts in region, chase
+       * Otherwise collect pills
+       */
+      State chaseGhosts;
+      
+      //machine.setCurrentState(stateNeutral);
+      machine.setCurrentState(goToPowerPill);
       //Want to remain facing same direction until you hit intersection.
    }
 
    private void updateConditions(Game game) {
-      //update index of conditional.
-      isCurrentNodeJunction.setIndex(game.getPacmanCurrentNodeIndex());
+      
+      int pacmanNode = game.getPacmanCurrentNodeIndex();
+      isCurrentNodeJunction.update(pacmanNode);
+     
+      int pacmanX = game.getNodeXCood(pacmanNode);
+      int pacmanY = game.getNodeYCood(pacmanNode);
+      
+      powerPillInRegion.update(pacmanX-5, pacmanY - 5, pacmanX + 5, pacmanX + 5);
    }
 
    public MOVE getMove(Game game, long timeDue) {
       updateConditions(game);
-      // Place your game logic here to play the game as Ms Pac-Man
       Collection<IAction> actions = machine.update(game);
 
       // Perform all required actions.
       for (IAction action : actions) {
-         if (action != null) {
-            action.doAction();
-            if (action.getMove() != null)
-               myMove = action.getMove();
-         }
+         action.doAction();
+         myMove = action.getMove(game);
       }
       return myMove;
    }

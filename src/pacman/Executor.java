@@ -79,10 +79,10 @@ public class Executor
 		boolean bRunUnitTests=true;
 		
 		
-		exec.runGameTimed(new StarterPacMan(),new Legacy2TheReckoning(),visual,bRunUnitTests);
+		//exec.runGameTimed(new StarterPacMan(),new Legacy2TheReckoning(),visual,bRunUnitTests);
 		
 		// mypacman testing
-		//exec.runGameTimed(new MyPacMan(),new Legacy2TheReckoning(),visual,bRunUnitTests);
+		exec.runGameTimed(new MyPacMan(),new Legacy2TheReckoning(),visual,bRunUnitTests);
 
 		// myghost testing
 		//exec.runGameTimed(new StarterPacMan(),new MyGhosts(),visual,bRunUnitTests);

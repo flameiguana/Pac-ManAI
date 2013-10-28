@@ -23,4 +23,9 @@ public class GoDownAction implements IAction, IBinaryNode {
       return MOVE.DOWN;
    }
 
+   @Override
+   public MOVE getMove(Game game) {
+      return getMove();
+   }
+
 }

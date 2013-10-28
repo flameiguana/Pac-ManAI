@@ -11,34 +11,36 @@ import edu.ucsc.gameAI.fsm.IState;
 public class StateMachine implements IStateMachine {
 
    IState currentState;
-   
+
    @Override
    public Collection<IAction> update(Game game) {
       ArrayList<IAction> actions = new ArrayList<IAction>();
       ITransition triggeredTrans = null;
-      
-      //Check if any possible transition is triggered.
-      for(ITransition transition : currentState.getTransitions()){
-         if(transition.isTriggered(game))
-            triggeredTrans = transition;
+
+      // Check if any possible transition is triggered.
+      if (currentState.getTransitions() != null) {
+         for (ITransition transition : currentState.getTransitions()) {
+            if (transition.isTriggered(game))
+               triggeredTrans = transition;
             break;
+         }
       }
-      
-      //Get actions associated with making a transition. Update currentState.
-      if (triggeredTrans != null){
+
+      // Get actions associated with making a transition. Update currentState.
+      if (triggeredTrans != null) {
          IState targetState = triggeredTrans.getTargetState();
-         if(currentState.getExitAction() != null)
+         if (currentState.getExitAction() != null)
             actions.add(currentState.getExitAction());
-         if(triggeredTrans.getAction() != null)
+         if (triggeredTrans.getAction() != null)
             actions.add(triggeredTrans.getAction());
-         if(targetState.getEntryAction() != null)
+         if (targetState.getEntryAction() != null)
             actions.add(targetState.getEntryAction());
          currentState = targetState;
       }
-      
-      else
+
+      else if (currentState.getAction() != null)
          actions.add(currentState.getAction());
-      
+
       return actions;
    }
 
