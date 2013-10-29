@@ -28,24 +28,46 @@ public class MyPacMan extends Controller<MOVE> {
       //States
       goToPowerPill = new State();
       goToPowerPill.setAction(new SeekPowerPillAction());
-      
+   
+      /*
+       * Want a state that will go around collecting pills in a sweeping fashion.
+       */
       State stateNeutral = new State();
-      stateNeutral.setAction(new KeepDirectionAction());
+      stateNeutral.setAction(new CollectPillsAction());
       
-      State chaseGhosts;
+      State chaseGhosts = new State();
 
+      State evadeGhosts;
+      
       //Conditions
       powerPillInRange = new PowerPillInRange(20);
+      PowerPillWasEaten atePill = new PowerPillWasEaten();
+      
       
       //Transitions:
       Transition trans_goToPowerPill = new Transition();
       trans_goToPowerPill.setCondition(powerPillInRange);
       trans_goToPowerPill.setTargetState(goToPowerPill);
       
+      Transition trans_PowerPillToNeutral = new Transition();
+      trans_PowerPillToNeutral.setCondition(atePill);
+      trans_PowerPillToNeutral.setTargetState(stateNeutral);
       
+      Transition trans_chaseNearbyGhost = new Transition();
+      //condition
+      trans_chaseNearbyGhost.setTargetState(chaseGhosts);
+      
+      
+      //--------
       LinkedList<ITransition> neutralTransList = new LinkedList<ITransition>();
       neutralTransList.add(trans_goToPowerPill);
       stateNeutral.setTransitions(neutralTransList);
+      
+      LinkedList<ITransition> seekPillTransList = new LinkedList<ITransition>();
+      seekPillTransList.add(trans_PowerPillToNeutral);
+      goToPowerPill.setTransitions(seekPillTransList);
+      
+      //one transition to collect pills, another to chase ghosts.
  
 
       //in action check if at turning point or stay in same direction;

@@ -30,7 +30,7 @@ public class SeekPowerPillAction implements IAction {
       }
       pillIndex = game.getPowerPillIndex(pillNode);
       
-      //System.out.println("Target pill is: " + pillIndex);
+      System.out.println("Target pill is: " + pillIndex);
       progress = 0;
    }
 
