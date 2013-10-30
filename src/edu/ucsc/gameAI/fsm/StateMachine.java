@@ -20,9 +20,10 @@ public class StateMachine implements IStateMachine {
       // Check if any possible transition is triggered.
       if (currentState.getTransitions() != null) {
          for (ITransition transition : currentState.getTransitions()) {
-            if (transition.isTriggered(game))
+            if (transition.isTriggered(game)){
                triggeredTrans = transition;
-            break;
+               break;
+            }
          }
       }
 

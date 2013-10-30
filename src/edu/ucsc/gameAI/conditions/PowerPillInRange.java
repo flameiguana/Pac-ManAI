@@ -1,6 +1,8 @@
 package edu.ucsc.gameAI.conditions;
 
 import pacman.game.Constants.DM;
+import pacman.game.Constants.GHOST;
+import pacman.game.Constants;
 import pacman.game.Game;
 import edu.ucsc.gameAI.ICondition;
 
@@ -13,6 +15,9 @@ public class PowerPillInRange implements ICondition {
 
 	@Override
 	public boolean test(Game game) {
+	   if(game.getCurrentLevelTime() < GHOST.SUE.initialLairTime)
+	      return false;
+	   
 		int[] activePills = game.getActivePowerPillsIndices();
 
 		for (int pill : activePills) {

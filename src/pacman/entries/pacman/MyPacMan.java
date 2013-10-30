@@ -36,13 +36,15 @@ public class MyPacMan extends Controller<MOVE> {
       stateNeutral.setAction(new CollectPillsAction());
       
       State chaseGhosts = new State();
+      chaseGhosts.setAction(new ChaseGhostsAction());
 
-      State evadeGhosts;
+      State evadeGhosts = new State();
+      evadeGhosts.setAction(new RunAwayAction());
       
       //Conditions
-      powerPillInRange = new PowerPillInRange(20);
+      powerPillInRange = new PowerPillInRange(40);
       PowerPillWasEaten atePill = new PowerPillWasEaten();
-      
+      NearbyGhostEdible nearbyGhostEdible = new NearbyGhostEdible(60);
       
       //Transitions:
       Transition trans_goToPowerPill = new Transition();
@@ -54,25 +56,39 @@ public class MyPacMan extends Controller<MOVE> {
       trans_PowerPillToNeutral.setTargetState(stateNeutral);
       
       Transition trans_chaseNearbyGhost = new Transition();
-      //condition
+      trans_chaseNearbyGhost.setCondition(nearbyGhostEdible);
       trans_chaseNearbyGhost.setTargetState(chaseGhosts);
       
+      Transition trans_stopChasing = new Transition();
+      trans_stopChasing.setCondition(new NegateCondition(new NearbyGhostEdible(60)));
+      trans_stopChasing.setTargetState(stateNeutral);
+      
+      Transition trans_runAway = new Transition();
+      //
+      trans_runAway.setTargetState(evadeGhosts);
       
       //--------
+      
       LinkedList<ITransition> neutralTransList = new LinkedList<ITransition>();
+      neutralTransList.add(trans_chaseNearbyGhost);
       neutralTransList.add(trans_goToPowerPill);
       stateNeutral.setTransitions(neutralTransList);
+      
       
       LinkedList<ITransition> seekPillTransList = new LinkedList<ITransition>();
       seekPillTransList.add(trans_PowerPillToNeutral);
       goToPowerPill.setTransitions(seekPillTransList);
+      
+      LinkedList<ITransition> chaseGhostTransList = new LinkedList<ITransition>();
+      chaseGhostTransList.add(trans_stopChasing);
+      chaseGhosts.setTransitions(chaseGhostTransList);
       
       //one transition to collect pills, another to chase ghosts.
  
 
       //in action check if at turning point or stay in same direction;
       /*
-       * See if there are power pills remanining
+       * See if there are power pills remaining
        * Choose closest one
        * Check if there are ghosts in region
        * Move to point while avoiding ghosts.
@@ -85,22 +101,12 @@ public class MyPacMan extends Controller<MOVE> {
        * Otherwise collect pills
        */
       
-      
-      //machine.setCurrentState(stateNeutral);
       machine = new StateMachine();
       machine.setCurrentState(stateNeutral);
    }
 
-   private void updateConditions(Game game) {
-      
-      int pacmanNode = game.getPacmanCurrentNodeIndex();
-     
-      int pacmanX = game.getNodeXCood(pacmanNode);
-      int pacmanY = game.getNodeYCood(pacmanNode);
-   }
 
    public MOVE getMove(Game game, long timeDue) {
-      updateConditions(game);
       Collection<IAction> actions = machine.update(game);
 
       // Perform all required actions.
