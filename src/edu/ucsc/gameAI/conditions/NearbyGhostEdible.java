@@ -15,10 +15,6 @@ public class NearbyGhostEdible implements ICondition {
    
    @Override
    public boolean test(Game game) {
-      //getGhostCurrentNodeIndex(GHOST ghostType)
-      //getGhostEdibleTime(GHOST ghostType)
-      //isGhostEdible(GHOST ghostType)
-  
       for (GHOST ghost : GHOST.values()){
          if(game.isGhostEdible(ghost)){
             if(game.getDistance(game.getPacmanCurrentNodeIndex(),

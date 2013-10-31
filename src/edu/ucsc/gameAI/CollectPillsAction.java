@@ -13,7 +13,6 @@ public class CollectPillsAction implements IAction {
    @Override
    public void doAction() {
       // TODO Auto-generated method stub
-
    }
 
    //if next to a pill go get it, otherwise look for a pill
@@ -42,6 +41,7 @@ public class CollectPillsAction implements IAction {
       }
       
       //Look for closest pill.
+      
       else {
          targetNode = game.getClosestNodeIndexFromNodeIndex(currentPacman, activePills, DM.PATH);
          return game.getNextMoveTowardsTarget(currentPacman, targetNode, DM.PATH);

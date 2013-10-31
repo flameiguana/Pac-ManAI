@@ -39,7 +39,7 @@ public class StateMachine implements IStateMachine {
          currentState = targetState;
       }
 
-      else if (currentState.getAction() != null)
+      if (currentState.getAction() != null)
          actions.add(currentState.getAction());
 
       return actions;

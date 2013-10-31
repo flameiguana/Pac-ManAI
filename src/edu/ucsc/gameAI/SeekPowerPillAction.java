@@ -22,12 +22,14 @@ public class SeekPowerPillAction implements IAction {
       double min = Double.MAX_VALUE;
       for(int pill : activePills){
          double distanceToPill = game.getDistance(game.getPacmanCurrentNodeIndex(), pill, DM.MANHATTAN);
+         
          if(distanceToPill < min){
          	pillNode = pill; 
          	min = distanceToPill;
          	//System.out.println("Pill is: " + game.getPowerPillIndex(pillNode) + " , distance is " + min);
          }
       }
+      
       pillIndex = game.getPowerPillIndex(pillNode);
       
       System.out.println("Target pill is: " + pillIndex);
@@ -36,21 +38,11 @@ public class SeekPowerPillAction implements IAction {
 
    @Override
    public MOVE getMove(Game game) {
-      if(progress == 0 || !game.isPowerPillStillAvailable(pillIndex)){
-         //select the pill
-         selectPill(game);
-      }
-      progress++;
+      selectPill(game);
       //don't know how efficient this is yet.
+      System.out.println("heading to pill");
       return game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), pillNode, DM.PATH);
       
-      //Find moves.
-      //Useful functions:
-      //getMoveToMakeToReachDirectNeighbour
-      //getNextMoveTowardsTarget
-      //getApproximateNextMoveTowardsTarget
-      //getShortestPath
-      //return null;
    }
 
    @Override

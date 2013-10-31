@@ -22,12 +22,12 @@ public class ChaseGhostsAction implements IAction {
       ArrayList<GHOST> edibleGhosts = new ArrayList<GHOST>();
    
       for (GHOST ghost : GHOST.values()){
-         if(game.isGhostEdible(ghost));
+         if(game.isGhostEdible(ghost))
             edibleGhosts.add(ghost);
       }
       
       int[] ghostLocations = new int[edibleGhosts.size()];
-      for(int i = 0; i < edibleGhosts.size();i++){
+      for(int i = 0; i < edibleGhosts.size(); i++){
          ghostLocations[i] = game.getGhostCurrentNodeIndex(edibleGhosts.get(i));
       }
       

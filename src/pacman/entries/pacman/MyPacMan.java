@@ -14,6 +14,15 @@ import edu.ucsc.gameAI.*;
  * This is the class you need to modify for your entry. In particular, you need to
  * fill in the getAction() method. Any additional classes you write should either
  * be placed in this package or sub-packages (e.g., game.entries.pacman.mypackage).
+ * fix priority conflict between power pill and evadeing
+ */
+
+/*
+ * TODO:
+ * Update power pill in range so that it doesnt return true until all ghosts are out of lair
+ * fix evade ghosts.
+ * update chase ghosts so that it doesnt try paths with live ghosts and takes time intro consdieration
+ * DOnt take power pills unless ghosts are nearby
  */
 public class MyPacMan extends Controller<MOVE> {
 
@@ -39,12 +48,13 @@ public class MyPacMan extends Controller<MOVE> {
       chaseGhosts.setAction(new ChaseGhostsAction());
 
       State evadeGhosts = new State();
+      //evadeGhosts.setEntryAction(new RunAwayAction());
       evadeGhosts.setAction(new RunAwayAction());
       
       //Conditions
-      powerPillInRange = new PowerPillInRange(40);
+      powerPillInRange = new PowerPillInRange(50);
       PowerPillWasEaten atePill = new PowerPillWasEaten();
-      NearbyGhostEdible nearbyGhostEdible = new NearbyGhostEdible(60);
+      NearbyGhostEdible nearbyGhostEdible = new NearbyGhostEdible(50);
       
       //Transitions:
       Transition trans_goToPowerPill = new Transition();
@@ -52,20 +62,25 @@ public class MyPacMan extends Controller<MOVE> {
       trans_goToPowerPill.setTargetState(goToPowerPill);
       
       Transition trans_PowerPillToNeutral = new Transition();
-      trans_PowerPillToNeutral.setCondition(atePill);
+      trans_PowerPillToNeutral.setCondition(new ORConditions(atePill, new NegateCondition(powerPillInRange)));
       trans_PowerPillToNeutral.setTargetState(stateNeutral);
       
       Transition trans_chaseNearbyGhost = new Transition();
+      //also one for when ghosts arent edible
       trans_chaseNearbyGhost.setCondition(nearbyGhostEdible);
       trans_chaseNearbyGhost.setTargetState(chaseGhosts);
       
       Transition trans_stopChasing = new Transition();
-      trans_stopChasing.setCondition(new NegateCondition(new NearbyGhostEdible(60)));
+      trans_stopChasing.setCondition(new NegateCondition(new NearbyGhostEdible(45)));
       trans_stopChasing.setTargetState(stateNeutral);
       
       Transition trans_runAway = new Transition();
-      trans_runAway.setCondition(new GhostInTheWay());
+      trans_runAway.setCondition(new GhostInTheWay(26.0));
       trans_runAway.setTargetState(evadeGhosts);
+      
+      Transition trans_stopRunning = new Transition();
+      trans_stopRunning.setCondition(new NegateCondition(new GhostInTheWay(30.0)));
+      trans_stopRunning.setTargetState(stateNeutral);
       
       //--------
       
@@ -77,34 +92,19 @@ public class MyPacMan extends Controller<MOVE> {
       
       
       LinkedList<ITransition> seekPillTransList = new LinkedList<ITransition>();
-      seekPillTransList.add(trans_PowerPillToNeutral);
       seekPillTransList.add(trans_runAway);
+      seekPillTransList.add(trans_PowerPillToNeutral);
       goToPowerPill.setTransitions(seekPillTransList);
       
       LinkedList<ITransition> chaseGhostTransList = new LinkedList<ITransition>();
+      chaseGhostTransList.add(trans_runAway);
       chaseGhostTransList.add(trans_stopChasing);
       chaseGhosts.setTransitions(chaseGhostTransList);
       
       LinkedList<ITransition> evadeGhostTransList = new LinkedList<ITransition>();
       evadeGhostTransList.add(trans_goToPowerPill);
+      evadeGhostTransList.add(trans_stopRunning);
       evadeGhosts.setTransitions(evadeGhostTransList);
-      
-      //one transition to collect pills, another to chase ghosts.
- 
-
-      //in action check if at turning point or stay in same direction;
-      /*
-       * See if there are power pills remaining
-       * Choose closest one
-       * Check if there are ghosts in region
-       * Move to point while avoiding ghosts.
-       */
-      
-
-      /*
-       * If you have power pill, and there are ghosts in region, chase
-       * Otherwise collect pills
-       */
       
       machine = new StateMachine();
       machine.setCurrentState(stateNeutral);
