@@ -64,24 +64,30 @@ public class MyPacMan extends Controller<MOVE> {
       trans_stopChasing.setTargetState(stateNeutral);
       
       Transition trans_runAway = new Transition();
-      //
+      trans_runAway.setCondition(new GhostInTheWay());
       trans_runAway.setTargetState(evadeGhosts);
       
       //--------
       
       LinkedList<ITransition> neutralTransList = new LinkedList<ITransition>();
       neutralTransList.add(trans_chaseNearbyGhost);
+      neutralTransList.add(trans_runAway);
       neutralTransList.add(trans_goToPowerPill);
       stateNeutral.setTransitions(neutralTransList);
       
       
       LinkedList<ITransition> seekPillTransList = new LinkedList<ITransition>();
       seekPillTransList.add(trans_PowerPillToNeutral);
+      seekPillTransList.add(trans_runAway);
       goToPowerPill.setTransitions(seekPillTransList);
       
       LinkedList<ITransition> chaseGhostTransList = new LinkedList<ITransition>();
       chaseGhostTransList.add(trans_stopChasing);
       chaseGhosts.setTransitions(chaseGhostTransList);
+      
+      LinkedList<ITransition> evadeGhostTransList = new LinkedList<ITransition>();
+      evadeGhostTransList.add(trans_goToPowerPill);
+      evadeGhosts.setTransitions(evadeGhostTransList);
       
       //one transition to collect pills, another to chase ghosts.
  
@@ -93,7 +99,6 @@ public class MyPacMan extends Controller<MOVE> {
        * Check if there are ghosts in region
        * Move to point while avoiding ghosts.
        */
-
       
 
       /*

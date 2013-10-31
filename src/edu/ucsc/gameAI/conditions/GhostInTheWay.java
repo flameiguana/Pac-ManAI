@@ -10,7 +10,7 @@ public class GhostInTheWay implements ICondition {
    @Override
    public boolean test(Game game) {
        for(GHOST ghost : GHOST.values()){
-          if(game.getDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(ghost), DM.PATH) < 5)
+          if(game.getDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(ghost), DM.PATH) < 2)
              return true;
        }
       return false;
