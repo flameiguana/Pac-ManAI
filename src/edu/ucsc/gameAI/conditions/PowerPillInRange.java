@@ -7,7 +7,7 @@ import edu.ucsc.gameAI.ICondition;
 
 public class PowerPillInRange implements ICondition {
 	int distance;
-	final static int RADIUS = 40;
+	final static int RADIUS = 56;
 
 	public PowerPillInRange(int distance) {
 		this.distance = distance;
@@ -33,7 +33,7 @@ public class PowerPillInRange implements ICondition {
 	private int getGhostsInArea(Game game, int node){
 		int ghostsInArea = 0; 
 		for(GHOST ghost : GHOST.values()){
-			if(game.getDistance(node, game.getGhostCurrentNodeIndex(ghost), DM.EUCLID) <= RADIUS)
+			if(game.getDistance(node, game.getGhostCurrentNodeIndex(ghost), DM.PATH) <= RADIUS)
 			ghostsInArea++;
 		}
 		return ghostsInArea;
@@ -51,10 +51,10 @@ public class PowerPillInRange implements ICondition {
 		int[] activePills = game.getActivePowerPillsIndices();
 
 		//The pill must be a certain distance from pacman, the path to the pill cannot contain ghosts, and there
-		//must be at least 2 ghosts in the perrimeter.
+		//must be at least 2 ghosts in the perimeter.
 		for (int pill : activePills) {
 			if(game.getDistance(game.getPacmanCurrentNodeIndex(),
-					pill, DM.PATH) < distance && !nonEdibleGhostInPath(game, pill)){
+					pill, DM.PATH) <= distance && !nonEdibleGhostInPath(game, pill)){
 				if(getGhostsInArea(game, pill) >= 2)
 					return true;
 			}

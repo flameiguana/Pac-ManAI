@@ -1,8 +1,8 @@
 package edu.ucsc.gameAI;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import pacman.game.Constants.DM;
 import pacman.game.Constants.MOVE;
@@ -15,37 +15,36 @@ public class CollectPillsAction implements IAction {
       // TODO Auto-generated method stub
    }
 
-   //if next to a pill go get it, otherwise look for a pill
+
    @Override
    public MOVE getMove(Game game) {
+     
+      //eat some pills at spawn before going crazy
+      if(game.getNumberOfActivePills()  >= game.getPillIndices().length - 4)
+         return MOVE.RIGHT;
+      
       int targetNode = -1;
       int currentPacman = game.getPacmanCurrentNodeIndex();
       
-      List<Integer> activePillList = new LinkedList<Integer>();
       int[] activePills = game.getActivePillsIndices();
-      for (int pill : activePills) {activePillList.add(pill);}
-      Collections.sort(activePillList);
       
-      //Here we check if a neighbor node contains a pill.
-      int[] neighbors = game.getNeighbouringNodes(currentPacman);
-      for(int neighbor : neighbors){
-         if(Collections.binarySearch(activePillList, neighbor) >= 0){
-           targetNode = neighbor;
-           break;
+      List<Integer> junctionPillsList = new LinkedList<Integer>();
+      for(int i = 0; i < activePills.length; i++){
+         if(game.isJunction(activePills[i]))
+            junctionPillsList.add(activePills[i]);
+      }
+
+      if(junctionPillsList.size() >= game.getJunctionIndices().length/2){
+         int[] junctionPillsArray = new int[junctionPillsList.size()];
+         for (int i = 0; i < junctionPillsList.size(); i++) {
+            junctionPillsArray[i] = junctionPillsList.get(i);
          }
+         targetNode = game.getClosestNodeIndexFromNodeIndex(currentPacman, junctionPillsArray, DM.PATH);
       }
-      
-      //Target node was found.
-      if(targetNode != -1){
-         return game.getMoveToMakeToReachDirectNeighbour(currentPacman, targetNode);
-      }
-      
-      //Look for closest pill.
-      
-      else {
+      else
          targetNode = game.getClosestNodeIndexFromNodeIndex(currentPacman, activePills, DM.PATH);
-         return game.getNextMoveTowardsTarget(currentPacman, targetNode, DM.PATH);
-      }
+      
+      return game.getNextMoveTowardsTarget(currentPacman, targetNode, DM.PATH);
    }
 
    @Override

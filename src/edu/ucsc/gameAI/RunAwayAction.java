@@ -13,6 +13,7 @@ public class RunAwayAction implements IAction {
 	MOVE currentMove;
 	int targetJunction;
 	Game _game;
+	int levelID;
    @Override
    public void doAction() {
       // TODO Auto-generated method stub
@@ -21,6 +22,7 @@ public class RunAwayAction implements IAction {
    
    public RunAwayAction(){
       targetJunction = -1;
+      levelID = -1;
    }
 
    public boolean arrayContains(final int[] array, final int key) {
@@ -32,16 +34,13 @@ public class RunAwayAction implements IAction {
       return false;
   }
    
-   //getFarthestNodeIndexFromNodeIndex
    
    private void getNewPath(){
-      //turn around
       int pacmanNode = _game.getPacmanCurrentNodeIndex();
       int[] junctions = _game.getJunctionIndices();
       TreeMap<Integer, Integer> paths = new TreeMap<Integer, Integer>();
       
-      //find a path to a junction with no ghost on it. if there are none, stall (move back and forth)
-    
+
       for(int i = 0; i < junctions.length; i++){
          boolean safe = true;
          int[] path = _game.getShortestPath(pacmanNode, junctions[i]);
@@ -52,7 +51,7 @@ public class RunAwayAction implements IAction {
             //store junction index and distance, considering only those without ghosts on the path towards them
             //also want to avoid ones with surrounding ghosts
             int ghostIndex= _game.getGhostCurrentNodeIndex(ghost);
-            if((arrayContains(path, ghostIndex) || (_game.getDistance(junctions[i], ghostIndex, DM.EUCLID) <= 40.0))){
+            if((arrayContains(path, ghostIndex) || (_game.getDistance(junctions[i], ghostIndex, DM.EUCLID) <= 36.0))){
                safe = false;
                break;
             }
@@ -62,12 +61,13 @@ public class RunAwayAction implements IAction {
       }
       
       if(paths.size() > 0){
-         System.out.println("There are " + paths.size() +  " possible paths");
+         //System.out.println("There are " + paths.size() +  " possible paths");
          //get farthest junction?
          targetJunction = paths.get(paths.lastKey());
       }
       else targetJunction = -1;
    }
+   
    
    private boolean junctionNoGood(int target){
       if (_game.getPacmanCurrentNodeIndex() == target)
@@ -75,7 +75,7 @@ public class RunAwayAction implements IAction {
       int[] path  = _game.getShortestPath(_game.getPacmanCurrentNodeIndex(), target);
       for(GHOST ghost : GHOST.values()){
          if(arrayContains(path, _game.getGhostCurrentNodeIndex(ghost))
-               || (_game.getDistance(target, _game.getGhostCurrentNodeIndex(ghost), DM.EUCLID) <= 40.0))
+               || (_game.getDistance(target, _game.getGhostCurrentNodeIndex(ghost), DM.PATH) <= 36.0))
             return true;
       }
       return false;
@@ -85,11 +85,13 @@ public class RunAwayAction implements IAction {
    public MOVE getMove(Game game) {
       _game = game;
       
-     if (targetJunction == -1 || junctionNoGood(targetJunction))
-         getNewPath();
-      
+     if (levelID != game.getCurrentLevel() || targetJunction == -1 || junctionNoGood(targetJunction)){
+        levelID = game.getCurrentLevel();
+        getNewPath();
+     }
+     
       if(targetJunction != -1){
-         System.out.println("heading towards junction" + " ( " + targetJunction + " )");
+         //System.out.println("heading towards junction" + " ( " + targetJunction + " )");
          return _game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), targetJunction, DM.PATH);
       }
       else
@@ -105,7 +107,7 @@ public class RunAwayAction implements IAction {
                min = distanceToGhost;
             }
          }
-         System.out.println("moving away from target");
+         //System.out.println("moving away from target");
          return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(), ghostIndex, DM.MANHATTAN);
       }
    }

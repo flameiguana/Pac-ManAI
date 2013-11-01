@@ -14,13 +14,15 @@ import edu.ucsc.gameAI.*;
  * This is the class you need to modify for your entry. In particular, you need to
  * fill in the getAction() method. Any additional classes you write should either
  * be placed in this package or sub-packages (e.g., game.entries.pacman.mypackage).
+ * fix priority conflict between power pill and evadeing
  */
 
 /*
  * TODO:
+ * Update power pill in range so that it doesnt return true until all ghosts are out of lair
+ * fix evade ghosts.
  * update chase ghosts so that it doesnt try paths with live ghosts and takes time intro consdieration
- * fix priority conflict between power pill and evading
- * only want to run away when chasing a ghost if there is no safe path to it, not just if there is a ghost around.
+ * DOnt take power pills unless ghosts are nearby
  */
 public class MyPacMan extends Controller<MOVE> {
 
@@ -36,18 +38,21 @@ public class MyPacMan extends Controller<MOVE> {
       goToPowerPill = new State();
       goToPowerPill.setAction(new SeekPowerPillAction());
    
+      /*
+       * Want a state that will go around collecting pills in a sweeping fashion.
+       */
       State stateNeutral = new State();
-      //stateNeutral.setEntryAction(new GoRandomAction());
       stateNeutral.setAction(new CollectPillsAction());
       
       State chaseGhosts = new State();
       chaseGhosts.setAction(new ChaseGhostsAction());
 
       State evadeGhosts = new State();
+      //evadeGhosts.setEntryAction(new RunAwayAction());
       evadeGhosts.setAction(new RunAwayAction());
       
       //Conditions
-      powerPillInRange = new PowerPillInRange(45);
+      powerPillInRange = new PowerPillInRange(50);
       PowerPillWasEaten atePill = new PowerPillWasEaten();
       NearbyGhostEdible nearbyGhostEdible = new NearbyGhostEdible(50);
       
@@ -61,6 +66,7 @@ public class MyPacMan extends Controller<MOVE> {
       trans_PowerPillToNeutral.setTargetState(stateNeutral);
       
       Transition trans_chaseNearbyGhost = new Transition();
+      //also one for when ghosts arent edible
       trans_chaseNearbyGhost.setCondition(nearbyGhostEdible);
       trans_chaseNearbyGhost.setTargetState(chaseGhosts);
       
@@ -69,7 +75,7 @@ public class MyPacMan extends Controller<MOVE> {
       trans_stopChasing.setTargetState(stateNeutral);
       
       Transition trans_runAway = new Transition();
-      trans_runAway.setCondition(new GhostInTheWay(30.0));
+      trans_runAway.setCondition(new GhostInTheWay(26.0));
       trans_runAway.setTargetState(evadeGhosts);
       
       Transition trans_stopRunning = new Transition();
@@ -86,6 +92,7 @@ public class MyPacMan extends Controller<MOVE> {
       
       
       LinkedList<ITransition> seekPillTransList = new LinkedList<ITransition>();
+      seekPillTransList.add(trans_runAway);
       seekPillTransList.add(trans_PowerPillToNeutral);
       goToPowerPill.setTransitions(seekPillTransList);
       
@@ -106,6 +113,7 @@ public class MyPacMan extends Controller<MOVE> {
 
    public MOVE getMove(Game game, long timeDue) {
       Collection<IAction> actions = machine.update(game);
+
       // Perform all required actions.
       for (IAction action : actions) {
          action.doAction();

@@ -32,10 +32,12 @@ public class ChaseGhostsAction implements IAction {
       }
       
      targetGhost = game.getClosestNodeIndexFromNodeIndex(game.getPacmanCurrentNodeIndex(), ghostLocations, DM.PATH);
+     /*DEBUG
      for(int i = 0; i < ghostLocations.length; i++){
         if(ghostLocations[i] == targetGhost)
            System.out.println("target ghost is " + edibleGhosts.get(i).name());
      }
+     */
    }
    
    @Override
