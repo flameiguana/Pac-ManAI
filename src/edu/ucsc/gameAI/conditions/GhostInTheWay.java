@@ -20,7 +20,8 @@ public class GhostInTheWay implements ICondition {
        for(GHOST ghost : GHOST.values()){
           if(game.isGhostEdible(ghost))
              continue;
-          double ghostDistance = game.getDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(ghost), DM.MANHATTAN);
+          //MANHAT or PATH?
+          double ghostDistance = game.getDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(ghost), DM.PATH);
           if(ghostDistance <= distance && ghostDistance != -1.0){
              return true;
           }
