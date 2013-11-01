@@ -15,6 +15,7 @@ import edu.ucsc.gameAI.*;
  * fill in the getAction() method. Any additional classes you write should either
  * be placed in this package or sub-packages (e.g., game.entries.pacman.mypackage).
  * fix priority conflict between power pill and evadeing
+ * Commit to getting power pill evfen if being chased
  */
 
 /*
@@ -92,7 +93,7 @@ public class MyPacMan extends Controller<MOVE> {
       
       
       LinkedList<ITransition> seekPillTransList = new LinkedList<ITransition>();
-      seekPillTransList.add(trans_runAway);
+      //seekPillTransList.add(trans_runAway);
       seekPillTransList.add(trans_PowerPillToNeutral);
       goToPowerPill.setTransitions(seekPillTransList);
       
