@@ -76,13 +76,13 @@ public class Executor
 		boolean visual=true;
 		
 		// run unit tests during execution
-		boolean bRunUnitTests=false;
+		boolean bRunUnitTests=true;
 		
 		
 		//exec.runGameTimed(new StarterPacMan(),new Legacy2TheReckoning(),visual,bRunUnitTests);
-		exec.runExperiment(new MyPacMan(), new Legacy2TheReckoning(), numTrials);
+		//exec.runExperiment(new MyPacMan(), new Legacy2TheReckoning(), numTrials);
 		// mypacman testing
-		//exec.runGameTimed(new MyPacMan(),new Legacy2TheReckoning(),visual,bRunUnitTests);
+		exec.runGameTimed(new MyPacMan(),new MyGhosts(),visual,bRunUnitTests);
 
 		// myghost testing
 		//exec.runGameTimed(new StarterPacMan(),new MyGhosts(),visual,bRunUnitTests);

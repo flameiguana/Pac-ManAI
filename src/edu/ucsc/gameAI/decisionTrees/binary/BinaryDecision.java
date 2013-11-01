@@ -19,6 +19,7 @@ public class BinaryDecision implements IBinaryDecision, IBinaryNode {
 	/**
 	 * Setter for the true branch.
 	 * @param node The node associated with the true branch of the decision.
+	 * @throws Exception 
 	 */
 	@Override
 	public void setTrueBranch(IBinaryNode node)
