@@ -20,13 +20,15 @@ public class GoRandomAction implements IAction {
 
    @Override
    public MOVE getMove() {
-      int index = random.nextInt(MOVE.values().length);
-      return MOVE.values()[index];
+      return null;
    }
 
    @Override
    public MOVE getMove(Game game) {
-      return getMove();
+      MOVE[] myMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
+      int index = random.nextInt(myMoves.length);
+      //System.out.println(myMoves[index].name());
+      return myMoves[index];
    }
 
 }

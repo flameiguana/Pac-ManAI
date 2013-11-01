@@ -6,7 +6,6 @@ import pacman.game.Game;
 
 public class SeekPowerPillAction implements IAction {
 
-   int progress = 0;
    int pillIndex;
    int pillNode;
    @Override
@@ -31,16 +30,13 @@ public class SeekPowerPillAction implements IAction {
       }
       
       pillIndex = game.getPowerPillIndex(pillNode);
-      
-      System.out.println("Target pill is: " + pillIndex);
-      progress = 0;
+      //System.out.println("Target pill is: " + pillIndex);
    }
 
    @Override
    public MOVE getMove(Game game) {
       selectPill(game);
-      //don't know how efficient this is yet.
-      System.out.println("heading to pill");
+      //System.out.println("heading to pill");
       return game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), pillNode, DM.PATH);
       
    }
