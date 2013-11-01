@@ -2,7 +2,6 @@ package edu.ucsc.gameAI;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import pacman.game.Constants.DM;
 import pacman.game.Constants.MOVE;
