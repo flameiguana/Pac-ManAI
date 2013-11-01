@@ -22,7 +22,7 @@ import edu.ucsc.gameAI.*;
  * Update power pill in range so that it doesnt return true until all ghosts are out of lair
  * fix evade ghosts.
  * update chase ghosts so that it doesnt try paths with live ghosts and takes time intro consdieration
- * DOnt take power pills unless ghosts are nearby
+ * Dont take power pills unless ghosts are nearby
  */
 public class MyPacMan extends Controller<MOVE> {
 
@@ -48,7 +48,6 @@ public class MyPacMan extends Controller<MOVE> {
       chaseGhosts.setAction(new ChaseGhostsAction());
 
       State evadeGhosts = new State();
-      //evadeGhosts.setEntryAction(new RunAwayAction());
       evadeGhosts.setAction(new RunAwayAction());
       
       //Conditions
@@ -92,7 +91,7 @@ public class MyPacMan extends Controller<MOVE> {
       
       
       LinkedList<ITransition> seekPillTransList = new LinkedList<ITransition>();
-      seekPillTransList.add(trans_runAway);
+      //seekPillTransList.add(trans_runAway);
       seekPillTransList.add(trans_PowerPillToNeutral);
       goToPowerPill.setTransitions(seekPillTransList);
       
