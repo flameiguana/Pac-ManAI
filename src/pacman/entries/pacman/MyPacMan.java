@@ -15,7 +15,7 @@ import edu.ucsc.gameAI.*;
  * fill in the getAction() method. Any additional classes you write should either
  * be placed in this package or sub-packages (e.g., game.entries.pacman.mypackage).
  * fix priority conflict between power pill and evadeing
- * Commit to getting power pill evfen if being chased
+ * 
  */
 
 /*
@@ -23,7 +23,7 @@ import edu.ucsc.gameAI.*;
  * Update power pill in range so that it doesnt return true until all ghosts are out of lair
  * fix evade ghosts.
  * update chase ghosts so that it doesnt try paths with live ghosts and takes time intro consdieration
- * DOnt take power pills unless ghosts are nearby
+ * FOr some reason paths that go across the map arent valid
  */
 public class MyPacMan extends Controller<MOVE> {
 
@@ -49,7 +49,6 @@ public class MyPacMan extends Controller<MOVE> {
       chaseGhosts.setAction(new ChaseGhostsAction());
 
       State evadeGhosts = new State();
-      //evadeGhosts.setEntryAction(new RunAwayAction());
       evadeGhosts.setAction(new RunAwayAction());
       
       //Conditions

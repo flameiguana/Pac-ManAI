@@ -18,7 +18,7 @@ public class NearbyGhostEdible implements ICondition {
       for (GHOST ghost : GHOST.values()){
          if(game.isGhostEdible(ghost)){
             if(game.getDistance(game.getPacmanCurrentNodeIndex(),
-               game.getGhostCurrentNodeIndex(ghost), DM.EUCLID) <= distance)
+               game.getGhostCurrentNodeIndex(ghost), DM.PATH) <= distance)
                return true;
          }
       }

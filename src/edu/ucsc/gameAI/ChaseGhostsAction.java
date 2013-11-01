@@ -36,9 +36,7 @@ public class ChaseGhostsAction implements IAction {
         if(ghostLocations[i] == targetGhost)
            System.out.println("target ghost is " + edibleGhosts.get(i).name());
      }
-     
    }
-   //want to leave this state the moment we eat a ghost
    
    @Override
    public MOVE getMove(Game game) {
